@@ -9,6 +9,12 @@
     <version>1.0</version>
     <packaging>pom</packaging>
 
+    <modules>
+        <module>myriad-core</module>
+        <module>myriad-data</module>
+        <module>myriad-web</module>
+    </modules>
+
     <properties>
         <myriad.version>1.0</myriad.version>
         <spring.version>4.3.9.RELEASE</spring.version>

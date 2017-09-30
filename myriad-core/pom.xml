@@ -7,11 +7,8 @@
         <groupId>com.jungle</groupId>
         <version>1.0</version>
     </parent>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>myriad-core</artifactId>
-    <modules>
-        <module>spring-base</module>
-    </modules>
 </project>
