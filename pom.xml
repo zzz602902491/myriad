@@ -16,6 +16,7 @@
         <aspectjweaver.version>1.7.3</aspectjweaver.version>
         <cglib.version>2.2.2</cglib.version>
         <java.version>1.8</java.version>
+        <spring.version>4.3.7.RELEASE</spring.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -76,6 +77,23 @@
                 <artifactId>spring-context-support</artifactId>
                 <version>${spring.version}</version>
             </dependency>
+
+            <!-- spring web -->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-webmvc</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-oxm</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -83,14 +101,267 @@
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>1.7</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>2.5</version>
+                    <configuration>
+                        <filesets>
+                            <fileset>
+                                <directory>src/main/webapp/WEB-INF/classes</directory>
+                            </fileset>
+                            <fileset>
+                                <directory>src/main/webapp/WEB-INF/lib</directory>
+                            </fileset>
+                        </filesets>
+                    </configuration>
+                </plugin>
+                <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.3</version>
                     <configuration>
+                        <fork>true</fork>
+                        <verbose>true</verbose>
+                        <failOnError>true</failOnError>
                         <source>${java.version}</source>
                         <target>${java.version}</target>
-                        <showWarnings>true</showWarnings>
+                        <showWarnings>false</showWarnings>
+                        <compilerArgument>-nowarn</compilerArgument>
                         <encoding>${project.build.sourceEncoding}</encoding>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>1.8</version>
+                    <executions>
+                        <execution>
+                            <id>add-functional-source</id>
+                            <phase>generate-sources</phase>
+                            <goals>
+                                <goal>add-test-source</goal>
+                            </goals>
+                            <configuration>
+                                <sources>
+                                    <source>src/test/functional</source>
+                                </sources>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-eclipse-plugin</artifactId>
+                    <version>2.9</version>
+                    <configuration>
+                        <downloadSources>true</downloadSources>
+                        <downloadJavadocs>true</downloadJavadocs>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>2.4</version>
+                    <configuration>
+                        <archive>
+                            <!-- 是否增加maven描述信息 -->
+                            <addMavenDescriptor>false</addMavenDescriptor>
+                            <manifest>
+                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            </manifest>
+                        </archive>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>2.10.3</version>
+                    <configuration>
+                        <skip>true</skip>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>attach-javadoc</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>2.6</version>
+                </plugin>
+                <plugin>
+                    <groupId>com.juvenxu.portable-config-maven-plugin</groupId>
+                    <artifactId>portable-config-maven-plugin</artifactId>
+                    <version>1.1.5</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>2.6</version>
+                    <configuration>
+                        <warName>${project.build.finalName}</warName>
+                        <failOnMissingWebXml>false</failOnMissingWebXml>
+                        <recompressZippedFiles>true</recompressZippedFiles>
+                        <webappDirectory>${basedir}/src/main/webapp</webappDirectory>
+                        <warSourceDirectory>${basedir}/src/main/webapp</warSourceDirectory>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.cargo</groupId>
+                    <artifactId>cargo-maven2-plugin</artifactId>
+                    <version>1.4.5</version>
+                    <configuration>
+                        <container>
+                            <containerId>tomcat7x</containerId>
+                            <type>remote</type>
+                        </container>
+                        <configuration>
+                            <type>runtime</type>
+                            <properties>
+                                <cargo.hostname>192.168.1.110</cargo.hostname>
+                                <cargo.servlet.port>8080</cargo.servlet.port>
+                                <cargo.remote.username>tomcat</cargo.remote.username>
+                                <cargo.remote.password>tomcat,.</cargo.remote.password>
+                                <cargo.tomcat.manager.url>http://192.168.1.110:8080/manager</cargo.tomcat.manager.url>
+                            </properties>
+                        </configuration>
+                        <deployables>
+                            <deployable>
+                                <properties>
+                                    <context>${project.build.finalName}</context>
+                                </properties>
+                            </deployable>
+                        </deployables>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-maven-plugin</artifactId>
+                    <version>9.3.0.v20150612</version>
+                    <configuration>
+                        <webAppConfig>
+                            <contextPath>/${project.build.finalName}</contextPath>
+                        </webAppConfig>
+                        <!-- 指定监控的扫描时间间隔，0为关闭jetty自身的热部署，主要是为了使用jrebel -->
+                        <scanIntervalSeconds>0</scanIntervalSeconds>
+                        <useTestClasspath>false</useTestClasspath>
+                        <!-- 指定web页面的文件夹 -->
+                        <webAppSourceDirectory>${basedir}/src/main/webapp</webAppSourceDirectory>
+                        <jvmArgs>-Xms1024m -Xmx1024m -XX:PermSize=512m -XX:MaxPermSize=780m -XX:ParallelGCThreads=8 -Dfile.encoding=UTF-8</jvmArgs>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.tomcat.maven</groupId>
+                    <artifactId>tomcat7-maven-plugin</artifactId>
+                    <version>2.2</version>
+                    <configuration>
+                        <path>/${project.build.finalName}</path>
+                        <port>8080</port>
+                        <uriEncoding>UTF-8</uriEncoding>
+                        <useTestClasspath>false</useTestClasspath>
+                        <systemProperties>
+                            <spring.profiles.active>development</spring.profiles.active>
+                        </systemProperties>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.5.2</version>
+                    <configuration>
+                        <tagBase>${svn.tag.url}</tagBase>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <version>1.2.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>2.4</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>2.7</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>2.8</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>2.15</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>2.4</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-archetype-plugin</artifactId>
+                    <version>2.2</version>
+                </plugin>
+                <!-- enforcer插件, 避免被依赖的依赖引入过期的jar包 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>1.1.1</version>
+                    <executions>
+                        <execution>
+                            <id>enforce-banned-dependencies</id>
+                            <goals>
+                                <goal>enforce</goal>
+                            </goals>
+                            <configuration>
+                                <rules>
+                                    <requireMavenVersion>
+                                        <version>3.0.3</version>
+                                    </requireMavenVersion>
+                                    <requireJavaVersion>
+                                        <version>${java.version}</version>
+                                    </requireJavaVersion>
+                                    <bannedDependencies>
+                                        <searchTransitive>true</searchTransitive>
+                                        <excludes>
+                                            <exclude>commons-logging</exclude>
+                                            <exclude>aspectj:aspectj*</exclude>
+                                            <exclude>org.springframework:2.*</exclude>
+                                            <exclude>org.springframework:3.0.*</exclude>
+                                        </excludes>
+                                    </bannedDependencies>
+                                </rules>
+                                <fail>true</fail>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>2.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.2</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>2.2.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.15</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>versions-maven-plugin</artifactId>
+                    <version>2.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>pl.project13.maven</groupId>
+                    <artifactId>git-commit-id-plugin</artifactId>
+                    <version>1.9</version>
                 </plugin>
             </plugins>
         </pluginManagement>
