@@ -28,7 +28,7 @@
         <!-- 连接池最小空闲 -->
         <property name="minIdle" value="${jdbc.minIdle}"></property>
         <!-- 获取连接最大等待时间 -->
-        <property name="maxWait" value="${maxWait}"></property>
+        <property name="maxWait" value="${jdbc.maxWait}"></property>
     </bean>
 
     <!-- spring和MyBatis完美整合，不需要mybatis的配置映射文件 -->
@@ -40,7 +40,7 @@
 
     <!-- DAO接口所在包名，Spring会自动查找其下的类 -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.cn.hnust.dao" />
+        <property name="basePackage" value="com.jungle.dao" />
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
     </bean>
 

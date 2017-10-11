@@ -138,6 +138,16 @@
                 <version>1.2.2</version>
             </dependency>
 
+
+            <!-- jdbc驱动 -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>5.1.39</version>
+            </dependency>
+
+
+
         </dependencies>
     </dependencyManagement>
 
