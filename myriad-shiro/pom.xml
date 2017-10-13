@@ -41,5 +41,6 @@
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-ehcache</artifactId>
         </dependency>
+
     </dependencies>
 </project>
