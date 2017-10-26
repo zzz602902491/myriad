@@ -190,6 +190,24 @@
                 <version>${shiro.version}</version>
             </dependency>
 
+
+            <!-- 缓存 -->
+<!--            <dependency>
+                <groupId>com.smart</groupId>
+                <artifactId>smart-cache</artifactId>
+                <version>1.23-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.smart</groupId>
+                <artifactId>smart-cache-autoload</artifactId>
+                <version>1.23</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.qiujiayu</groupId>
+                <artifactId>autoload-cache</artifactId>
+                <version>5.4.FIX</version>
+            </dependency>-->
+
         </dependencies>
     </dependencyManagement>
 

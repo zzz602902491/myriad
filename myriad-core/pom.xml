@@ -46,5 +46,18 @@
             <artifactId>aspectjweaver</artifactId>
         </dependency>
 
+        <!--<dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-cache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-cache-autoload</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.qiujiayu</groupId>
+            <artifactId>autoload-cache</artifactId>
+        </dependency>-->
+
     </dependencies>
 </project>

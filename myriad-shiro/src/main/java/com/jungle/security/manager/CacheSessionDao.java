@@ -13,7 +13,7 @@ import java.util.Collection;
  */
 public class CacheSessionDao extends AbstractSessionDAO{
 
-	private CacheTemplate cacheTemplate;
+//	private CacheTemplate cacheTemplate;
 
 	@Override protected Serializable doCreate(Session session) {
 		return null;
